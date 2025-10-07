@@ -626,10 +626,6 @@ describe('class MongoClient', function () {
       'checks out connection to confirm connectivity even when authentication is disabled',
       { requires: { auth: 'disabled' } },
       async function () {
-        const checkoutStartedEvents = [];
-        client.on('connectionCheckOutStarted', event => {
-          checkoutStartedEvents.push(event);
-        });
         const checkoutStarted = once(client, 'connectionCheckOutStarted');
         await client.connect();
         const checkout = await checkoutStarted;
@@ -725,6 +721,7 @@ describe('class MongoClient', function () {
         expect(result).to.be.instanceOf(MongoServerSelectionError);
         expect(client).to.be.instanceOf(MongoClient);
         expect(client).to.have.property('topology').that.is.instanceOf(Topology);
+        await client.close();
       }
     );
   });
